@@ -5,13 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RunescapeQuests"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Runescape Quest Helper" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="11*"/>
+            <RowDefinition Height="206*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="quests" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Height="414" Width="380"/>
-        <TextBlock x:Name="skills" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Height="414" Width="394" Margin="10,0,0,0" Grid.Column="1"/>
+        <ScrollViewer Margin="10,22,10,10" Grid.RowSpan="2">
+            <TextBlock x:Name="quests" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"  />
+        </ScrollViewer>
+        <ScrollViewer Margin="10,1,10,10" Grid.Column="1" Grid.Row="1">
+            <TextBlock x:Name="skills" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" />
+        </ScrollViewer>
+        <Label x:Name="label" Content="Quests" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Height="24" Width="46"/>
+        <Label x:Name="label1" Content="Skills" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Height="24" Grid.Column="1" Width="36"/>
     </Grid>
 </Window>

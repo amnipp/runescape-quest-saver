@@ -18,6 +18,8 @@ namespace RunescapeQuests.src
 
         private HtmlDocument WikiPageDoc;
 
+        private List<string> QuestList;
+
         public QuestLoader(AppendToQuestLogDelegate questLog, AppendToSkillLogDelegate skillLog)
         {
             AppendToQuestLog = questLog;
