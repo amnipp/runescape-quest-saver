@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using static RunescapeQuests.MainWindow;
+using static RunescapeQuests.gui.QuestChecker;
 
 namespace RunescapeQuests.src
 {
@@ -18,12 +18,13 @@ namespace RunescapeQuests.src
 
         private HtmlDocument WikiPageDoc;
 
-        private List<string> QuestList;
+        private List<KeyValuePair<int, string>> QuestList;
 
         public QuestLoader(AppendToQuestLogDelegate questLog, AppendToSkillLogDelegate skillLog)
         {
             AppendToQuestLog = questLog;
             AppendToSkillLog = skillLog;
+            QuestList = new();
         }
         public async void LoadQuestInfo(string questName)
         {
@@ -40,6 +41,20 @@ namespace RunescapeQuests.src
             LoadSkillRequirments();
         }
 
+        public string GetQuestListString()
+        {
+            string questListString = "";
+            foreach(var quest in QuestList)
+            {
+                string tab = "      ";
+                for(int i = 1; i <= quest.Key; ++i)
+                {
+                    questListString += tab;
+                }
+                questListString += quest.Value + "\r\n";
+            }
+            return questListString;
+        }
         //todo load quests into an array then format and append
         public void LoadQuestRequirements()
         {
@@ -66,39 +81,43 @@ namespace RunescapeQuests.src
                 foreach (var row in rows)
                 {
                     //iterate through the root quest reqs and get their children
-                    var questList = GetRequirmentQuest(row);
-                    AppendToQuestLog(questList);
+                    GetRequirmentQuest(row);
+                    //AppendToQuestLog(questList);
                     count = 0;
                 }
+                AppendToQuestLog(GetQuestListString());
             }
         }
+
         private int count = 0;
-        private string GetRequirmentQuest(HtmlNode questNode)
+        private void GetRequirmentQuest(HtmlNode questNode)
         {
             string requiredQuests = "";
             //the wiki uses ul to define a new list of children quests for the given parents, we need to keep track of this
             if (questNode.Name == "ul")
                 count++;
             //todo: write comments on how this works :^)
-            if (questNode.ChildNodes.Count != 1 || questNode.Name != "ul")
+            if ( questNode.Name != "ul")
             {
                 if (questNode.ChildNodes.Count == 0)
-                    return requiredQuests;
-                requiredQuests += questNode.ChildNodes[0].InnerText + "\r\n         ";
-                questNode.ChildNodes.RemoveAt(0);
-                for (int i = 1; i < count; i++)
+                    return;
+                if (questNode.ChildNodes[0].InnerText == "Heroes' Quest")
+                    Console.WriteLine();
+                var questName = questNode.ChildNodes[0].InnerText;
+                if (questNode.ChildNodes.Count == 2 && questNode.ChildNodes[1].Name == "a")
                 {
-                    requiredQuests = "        " + requiredQuests;
+                    questName += questNode.ChildNodes[1].InnerText;
+                    questNode.ChildNodes.RemoveAt(1);
                 }
+                QuestList.Add(new KeyValuePair<int, string>(count, questName));
+                questNode.ChildNodes.RemoveAt(0);
             }
 
             foreach (var quest in questNode.ChildNodes)
             {
                 //iterate through the children quests and do recursion to get that child's required quest
-                requiredQuests += GetRequirmentQuest(quest);
+                GetRequirmentQuest(quest);
             }
-
-            return requiredQuests;
         }
 
         //todo load skills into array then append to skill log
