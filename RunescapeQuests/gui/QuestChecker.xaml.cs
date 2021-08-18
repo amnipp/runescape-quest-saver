@@ -28,12 +28,14 @@ namespace RunescapeQuests.gui
             InitializeComponent();
         }
 
-        public void GetQuestRequirments(string questName)
+        public async void GetQuestRequirments(string questName)
         {
             var questNameFormatted = questName.Replace(' ', '_');
-            new QuestLoader(
-                new AppendToQuestLogDelegate(AppendToQuestLog), new AppendToSkillLogDelegate(AppendToSkillLog)
-                ).LoadQuestInfo(questNameFormatted);
+            var questLoader = new QuestLoader();
+            await questLoader.LoadQuestInfo(questNameFormatted);
+            AppendToQuestLog(questLoader.GetQuestListString());
+            AppendToSkillLog(questLoader.GetSkillListString());
+
         }
         private void AppendToQuestLog(string toAppend)
         {

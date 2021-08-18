@@ -14,33 +14,35 @@ namespace RunescapeQuests.src
 {
     class QuestLoader
     {
-        private AppendToQuestLogDelegate AppendToQuestLog;
-        private AppendToSkillLogDelegate AppendToSkillLog;
+        //private AppendToQuestLogDelegate AppendToQuestLog;
+        //private AppendToSkillLogDelegate AppendToSkillLog;
 
         private HtmlDocument WikiPageDoc;
 
-        private List<KeyValuePair<int, string>> QuestList;
-        private List<KeyValuePair<int, string>> SkillList;
-        public QuestLoader(AppendToQuestLogDelegate questLog, AppendToSkillLogDelegate skillLog)
+        public List<KeyValuePair<int, string>> QuestList { get; private set; }
+        public List<KeyValuePair<int, string>> SkillList { get; private set; }
+        public bool QuestLoaded;
+        public QuestLoader()
         {
-            AppendToQuestLog = questLog;
-            AppendToSkillLog = skillLog;
             QuestList = new();
             SkillList = new();
         }
-        public async void LoadQuestInfo(string questName)
+        public async Task LoadQuestInfo(string questName)
         {
+            QuestLoaded = false;
             //create client and call the RS Wiki api with the given quest name, this is json formated, and it is loading only the Overview (section=2)
             HttpClient client = new HttpClient();
-            var response = await client.GetAsync("https://runescape.wiki/api.php?action=parse&format=json&page=" + questName + "&prop=text&section=2");
+            var response = await client.GetAsync("https://runescape.wiki/api.php?action=parse&format=json&page=" + questName + "&prop=text");
             var pageContents = await response.Content.ReadAsStringAsync();
             //get the page contents and parse the json class, most of it is unneeded; parse.parse.text.text contains the html for the overview
             ApiJsonRoot parse = JsonSerializer.Deserialize<ApiJsonRoot>(pageContents);
             //create the HAP page doc to parse the html
             WikiPageDoc = new HtmlDocument();
             WikiPageDoc.LoadHtml(parse.parse.text.text);
-            LoadQuestRequirements();
-            LoadSkillRequirments();
+            bool questReqLoaded =  LoadQuestRequirements();
+            bool skillReqLoaded = LoadSkillRequirments();
+            if (questReqLoaded && skillReqLoaded)
+                QuestLoaded = true;
         }
 
         public string GetQuestListString()
@@ -84,7 +86,7 @@ namespace RunescapeQuests.src
             }
             return skillListString;
         }
-        public void LoadQuestRequirements()
+        private bool LoadQuestRequirements()
         {
             if (WikiPageDoc.DocumentNode != null)
             {
@@ -92,20 +94,18 @@ namespace RunescapeQuests.src
                 var table = WikiPageDoc.DocumentNode.SelectSingleNode("//table[@class='mw-collapsible mw-collapsed questreq']");
                 if (table == null)
                 {
-                    AppendToQuestLog("None");
-                    return;
+                    return false;
                 }
                 if (table.ParentNode.ParentNode.ChildNodes[0].InnerText != "Requirements")
                 {
-                    AppendToQuestLog("None");
-                    return;
+                    return false; ;
                 }
                 //more xpath, this is mostly just looking through the wiki layout and going past the unneeded sections
                 var quest = table.SelectSingleNode(".//tbody/tr[2]/td/ul/li/ul");
                 //we should finally have the quest list, child nodes will be all the root quest requirments
                 var rows = quest.ChildNodes;
                 if (rows == null)
-                    return;
+                    return true;
                 foreach (var row in rows)
                 {
                     //iterate through the root quest reqs and get their children
@@ -113,8 +113,9 @@ namespace RunescapeQuests.src
                     //AppendToQuestLog(questList);
                     count = 0;
                 }
-                AppendToQuestLog(GetQuestListString());
+                return true;
             }
+            return false;
         }
 
         private int count = 0;
@@ -145,7 +146,7 @@ namespace RunescapeQuests.src
             }
         }
 
-        public void LoadSkillRequirments()
+        private bool LoadSkillRequirments()
         {
             if (WikiPageDoc.DocumentNode != null)
             {
@@ -153,8 +154,7 @@ namespace RunescapeQuests.src
                 var table = WikiPageDoc.DocumentNode.SelectSingleNode("//td[@class=\"questdetails-info qc-active\"]");
                 if (table == null)
                 {
-                    AppendToSkillLog("None");
-                    return;
+                    return false;
                 }
                 var removeQuests = table.SelectNodes(".//table");
                 if (removeQuests != null)
@@ -163,8 +163,7 @@ namespace RunescapeQuests.src
                 var skills = table.SelectNodes(".//ul");
                 if (skills == null)
                 {
-                    AppendToSkillLog("None");
-                    return;
+                    return true;
                 }
                 foreach (var skill in skills)
                 {
@@ -172,8 +171,9 @@ namespace RunescapeQuests.src
                     var skillSplit = skill.InnerText.Split(' ');
                     SkillList.Add(new KeyValuePair<int, string>(int.Parse(skillSplit[0]), skillSplit[2]));
                 }
+                return true;
             }
-            AppendToSkillLog(GetSkillListString());
+            return false;
         }
     }
 
