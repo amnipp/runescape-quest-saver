@@ -14,11 +14,14 @@ namespace RunescapeQuests.src
         public Skills PlayerSkills { get; private set; }
         public async Task LoadPlayerStats(string PlayerName)
         {
+            ValidPlayerStats = false;
             PlayerSkills = new();
             HttpClient client = new HttpClient();
             var response = await client.GetAsync("https://apps.runescape.com/runemetrics/profile/profile?user=" + PlayerName);
             var pageContents = await response.Content.ReadAsStringAsync();
             RuneMetricProfile parse = JsonSerializer.Deserialize<RuneMetricProfile>(pageContents);
+            if (String.IsNullOrEmpty(parse.name))
+                return;
             parse.skillvalues.Sort(delegate (Skillvalue s1, Skillvalue s2) { return s1.id.CompareTo(s2.id);});
             FieldInfo[] fields = typeof(Skills).GetFields();
             int skillIter = 0;
@@ -28,7 +31,9 @@ namespace RunescapeQuests.src
                 field.SetValue(PlayerSkills, parse.skillvalues[skillIter]);
                 skillIter++;
             }
+            ValidPlayerStats = true;
         }
+        public bool ValidPlayerStats { get; private set; }
     }
     public class Skills
     {

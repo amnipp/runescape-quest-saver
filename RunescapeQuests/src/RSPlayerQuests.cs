@@ -8,18 +8,45 @@ using System.Threading.Tasks;
 
 namespace RunescapeQuests.src
 {
-    class RSPlayerQuests
+    public class RSPlayerQuests
     {
-        public List<Quest> PlayerQuestList {get; private set;}
+        public List<Quest> PlayerQuestList { get; private set; }
         public async Task LoadPlayerQuests(string PlayerName)
         {
+            ValidPlayerQuests = false;
             PlayerQuestList = new();
             HttpClient client = new HttpClient();
             var response = await client.GetAsync("https://apps.runescape.com/runemetrics/quests?user=" + PlayerName);
             var pageContents = await response.Content.ReadAsStringAsync();
             RunemetricQuests parse = JsonSerializer.Deserialize<RunemetricQuests>(pageContents);
+            if (parse.quests == null)
+                return;
             PlayerQuestList = parse.quests;
+            foreach(var quest in PlayerQuestList)
+            {
+                switch (quest.status)
+                {
+                    case "COMPLETED":
+                        quest.color = "Green";
+                        break;
+                    case "STARTED":
+                        quest.color = "Blue";
+                        break;
+                    case "NOT_STARTED":
+                        if (quest.userEligible == false)
+                        {
+                            quest.color = "Black";
+                        }
+                        else
+                        {
+                            quest.color = "Red";
+                        }
+                        break;
+                }
+            }
+            ValidPlayerQuests = true;
         }
+        public bool ValidPlayerQuests { get; private set; }
     }
     
     //Runemetric quest json classes
@@ -31,6 +58,7 @@ namespace RunescapeQuests.src
         public bool members { get; set; }
         public int questPoints { get; set; }
         public bool userEligible { get; set; }
+        public string color { get; set; }
     }
 
     public class RunemetricQuests

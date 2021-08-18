@@ -13,24 +13,23 @@ namespace RunescapeQuests
         public MainWindow()
         {
             InitializeComponent();
-            LoadPlayerInfo();
+            
             //new QuestLoader(
             //    new AppendToQuestLogDelegate(AppendToQuestLog), new AppendToSkillLogDelegate(AppendToSkillLog)
             //    ).LoadQuestInfo("Plague's_End");
         }
-        private async void LoadPlayerInfo()
+        private async void LoadPlayerInfo(string PlayerName)
         {
-            RSPlayer player = new("Dagrondx11");
+            RSPlayer player = RSPlayer.Instance;
+            player.SetPlayerName(PlayerName);
             await player.LoadPlayerInformation();
-            quests.ItemsSource = player.PlayerQuests.PlayerQuestList;
-            quests.DisplayMemberPath = "title";
-            /*foreach (var quest in player.PlayerQuests.PlayerQuestList)
+            if(player.IsValidPlayer == false)
             {
-                if (quest.userEligible)
-                    AppendToQuestLog(quest.title + ": " + quest.status);
-                else
-                    AppendToQuestLog(quest.title + ": NOT_ELIGIBLE");
-            }*/
+                MessageBox.Show(PlayerName + " is not a valid player name, please try another name", "Error");
+                return;
+            }
+            quests.ItemsSource = player.PlayerQuests.PlayerQuestList;
+
             foreach (var skill in player.PlayerSkills.PlayerSkills)
             {
                 AppendToSkillLog(skill.name + ": " + skill.level);
@@ -52,6 +51,19 @@ namespace RunescapeQuests
             QuestChecker questChecker = new();
             questChecker.GetQuestRequirments(questObj.title);
             questChecker.Show();
+        }
+
+        private void loadPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            skills.Text = "";
+
+            var playerName = playerNameBox.Text;
+            if(string.IsNullOrEmpty(playerName))
+            {
+                MessageBox.Show("Please enter a user!", "Error");
+                return;
+            }
+            LoadPlayerInfo(playerName);
         }
     }
 }
