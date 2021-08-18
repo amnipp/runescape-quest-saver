@@ -57,8 +57,11 @@ namespace RunescapeQuests.src
                 }
                 questListString += quest.Value;
                 var playerQuests = RSPlayer.Instance.PlayerQuests.PlayerQuestList.Where(q => q.title == quest.Value).FirstOrDefault();
-                if (playerQuests.status == "COMPLETED")
-                    questListString += " - COMPLETED";
+                if (playerQuests != null)
+                {
+                    if (playerQuests.status == "COMPLETED")
+                        questListString += " - COMPLETED";
+                }
                 questListString += "\r\n";
             }
             return questListString;
@@ -71,16 +74,22 @@ namespace RunescapeQuests.src
             FieldInfo[] fields = typeof(Skills).GetFields();
             foreach (var skill in SkillList)
             {
-                skillListString += skill.Value + " " + skill.Key;
-                var skillField = fields.Where(f => f.Name == skill.Value).FirstOrDefault();
-                var skillLevel = ((Skillvalue)skillField.GetValue(playerSkills)).level;
-                if(skillLevel >= skill.Key)
-                {
-                    skillListString += " - COMPLETED";
-                }
+                if (skill.Key != -1)
+                    skillListString += skill.Value + " " + skill.Key;
                 else
+                    skillListString += skill.Value + " ";
+                var skillField = fields.Where(f => f.Name == skill.Value).FirstOrDefault();
+                if (skillField != null)
                 {
-                    skillListString += " - NOT COMPLETED";
+                    var skillLevel = ((Skillvalue)skillField.GetValue(playerSkills)).level;
+                    if (skillLevel >= skill.Key)
+                    {
+                        skillListString += " - COMPLETED";
+                    }
+                    else
+                    {
+                        skillListString += " - NOT COMPLETED";
+                    }
                 }
                 skillListString += "\r\n";
             }
@@ -130,7 +139,7 @@ namespace RunescapeQuests.src
                 if (questNode.ChildNodes.Count == 0)
                     return;
                 var questName = questNode.ChildNodes[0].InnerText;
-                if (questNode.ChildNodes.Count == 2 && questNode.ChildNodes[1].Name == "a")
+                if ((questNode.ChildNodes.Count == 2 || questNode.ChildNodes.Count == 3) && questNode.ChildNodes[1].Name == "a")
                 {
                     questName += questNode.ChildNodes[1].InnerText;
                     questNode.ChildNodes.RemoveAt(1);
@@ -160,16 +169,20 @@ namespace RunescapeQuests.src
                 if (removeQuests != null)
                     foreach (var tableNode in removeQuests)
                         table.ChildNodes.Remove(tableNode);
-                var skills = table.SelectNodes(".//ul");
+                var skills = table.SelectNodes(".//ul/li");
                 if (skills == null)
                 {
                     return true;
                 }
                 foreach (var skill in skills)
                 {
-                    //AppendToSkillLog(skill.InnerText);
                     var skillSplit = skill.InnerText.Split(' ');
-                    SkillList.Add(new KeyValuePair<int, string>(int.Parse(skillSplit[0]), skillSplit[2]));
+                    if (skillSplit.Length == 3)
+                        SkillList.Add(new KeyValuePair<int, string>(int.Parse(skillSplit[0]), skillSplit[2]));
+                    else
+                    {
+                        SkillList.Add(new KeyValuePair<int, string>(-1, skill.InnerText));
+                    }
                 }
                 return true;
             }
