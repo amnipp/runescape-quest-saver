@@ -26,13 +26,13 @@ namespace RunescapeQuests.src
             {
                 switch (quest.status)
                 {
-                    case "COMPLETED":
+                    case QUEST_STATUS.Completed:
                         quest.color = "Green";
                         break;
-                    case "STARTED":
+                    case QUEST_STATUS.Started:
                         quest.color = "Blue";
                         break;
-                    case "NOT_STARTED":
+                    case QUEST_STATUS.NotStarted:
                         if (quest.userEligible == false)
                         {
                             quest.color = "Black";
@@ -48,7 +48,15 @@ namespace RunescapeQuests.src
         }
         public bool ValidPlayerQuests { get; private set; }
     }
-    
+
+    //Quest status class to be used like an ENUM
+    public static class QUEST_STATUS
+    {
+        public const string Completed = "COMPLETED";
+        public const string Started = "STARTED";
+        public const string NotStarted = "NOT_STARTED";
+    }
+
     //Runemetric quest json classes
     public class Quest
     {

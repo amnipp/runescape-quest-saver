@@ -2,6 +2,9 @@
 using System.Windows;
 using RunescapeQuests.src;
 using RunescapeQuests.gui;
+using System.ComponentModel;
+using System.Windows.Data;
+
 namespace RunescapeQuests
 {
     /// <summary>
@@ -69,6 +72,57 @@ namespace RunescapeQuests
                 return;
             }
             LoadPlayerInfo(playerName);
+        }
+
+        private void searchQuestBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
+            view.Filter = (obj) => {
+                Quest quest = obj as Quest;
+                return quest.title.ToLower().Contains(searchQuestBox.Text.ToLower()); 
+            };
+        }
+
+        private void filterAll_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
+            view.Filter = null;
+        }
+
+        private void filterStarted_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
+            view.Filter = (obj) => {
+                Quest quest = obj as Quest;
+                return quest.status == QUEST_STATUS.Started;
+            };
+        }
+
+        private void filterCompleted_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
+            view.Filter = (obj) => {
+                Quest quest = obj as Quest;
+                return quest.status == QUEST_STATUS.Completed;
+            };
+        }
+
+        private void filterEligible_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
+            view.Filter = (obj) => {
+                Quest quest = obj as Quest;
+                return quest.status == QUEST_STATUS.NotStarted && quest.userEligible == true;
+            };
+        }
+
+        private void filterNotEligible_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
+            view.Filter = (obj) => {
+                Quest quest = obj as Quest;
+                return quest.status == QUEST_STATUS.NotStarted && quest.userEligible == false;
+            };
         }
     }
 }
