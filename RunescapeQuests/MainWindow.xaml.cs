@@ -9,14 +9,16 @@ namespace RunescapeQuests
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private Settings userSettings;
         public MainWindow()
         {
+            userSettings = new();
             InitializeComponent();
-            
-            //new QuestLoader(
-            //    new AppendToQuestLogDelegate(AppendToQuestLog), new AppendToSkillLogDelegate(AppendToSkillLog)
-            //    ).LoadQuestInfo("Plague's_End");
+            if(!string.IsNullOrEmpty(userSettings.LastUser))
+            {
+                playerNameBox.Text = userSettings.LastUser;
+                LoadPlayerInfo(userSettings.LastUser);
+            }
         }
         private async void LoadPlayerInfo(string PlayerName)
         {
@@ -28,6 +30,10 @@ namespace RunescapeQuests
                 MessageBox.Show(PlayerName + " is not a valid player name, please try another name", "Error");
                 return;
             }
+
+            userSettings.LastUser = PlayerName;
+            userSettings.SaveSettings();
+
             quests.ItemsSource = player.PlayerQuests.PlayerQuestList;
 
             foreach (var skill in player.PlayerSkills.PlayerSkills)
@@ -56,7 +62,6 @@ namespace RunescapeQuests
         private void loadPlayer_Click(object sender, RoutedEventArgs e)
         {
             skills.Text = "";
-
             var playerName = playerNameBox.Text;
             if(string.IsNullOrEmpty(playerName))
             {

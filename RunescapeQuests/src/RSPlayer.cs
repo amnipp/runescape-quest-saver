@@ -12,6 +12,7 @@ namespace RunescapeQuests.src
         public static RSPlayer Instance { get { return lazyPlayer.Value; } }
         public RSPlayerSkills PlayerSkills { get; private set; }
         public RSPlayerQuests PlayerQuests { get; private set; }
+
         private string PlayerName;
 
         private RSPlayer()
