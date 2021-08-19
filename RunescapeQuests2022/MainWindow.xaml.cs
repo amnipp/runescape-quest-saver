@@ -37,7 +37,16 @@ namespace RunescapeQuests2022
                 playerNameBox.Text = userSettings.LastUser;
                 LoadPlayerInfo(userSettings.LastUser);
             }
+            new FixStaticAssetsJson();
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
+        }
+
         private async void LoadPlayerInfo(string PlayerName)
         {
             RSPlayer player = RSPlayer.Instance;
@@ -144,7 +153,14 @@ namespace RunescapeQuests2022
         {
             TestWindow testWnd = new();
             testWnd.Title = "Test";
-            testWnd.Show();
+            try
+            {
+                testWnd.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.ToString(), "Error");
+            }
         }
     }
 }

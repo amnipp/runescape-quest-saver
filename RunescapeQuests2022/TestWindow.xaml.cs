@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace RunescapeQuests2022
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
+
             Resources.Add("services", serviceCollection.BuildServiceProvider());
             InitializeComponent();
         }
