@@ -139,5 +139,12 @@ namespace RunescapeQuests2022
                 return quest.status == QUEST_STATUS.NotStarted && quest.userEligible == false;
             };
         }
+
+        private void testBtn_Click(object sender, RoutedEventArgs e)
+        {
+            TestWindow testWnd = new();
+            testWnd.Title = "Test";
+            testWnd.Show();
+        }
     }
 }

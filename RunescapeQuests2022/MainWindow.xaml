@@ -45,5 +45,6 @@
         <Button x:Name="filterStarted" Content="Started" HorizontalAlignment="Left" Margin="233,4,0,0" Grid.Row="2" VerticalAlignment="Top" Width="46" Click="filterStarted_Click"/>
         <Button x:Name="filterEligible" Content="Eligible" HorizontalAlignment="Left" Margin="182,29,0,0" Grid.Row="2" VerticalAlignment="Top" Width="46" Click="filterEligible_Click"/>
         <Button x:Name="filterNotEligible" Content="Not Eligible" HorizontalAlignment="Left" Margin="233,29,0,0" Grid.Row="2" VerticalAlignment="Top" Width="74" Click="filterNotEligible_Click"/>
+        <Button x:Name="testBtn" Content="Test" HorizontalAlignment="Left" Margin="346,0,0,0" VerticalAlignment="Center" Grid.Column="1" Height="24" Width="27" Click="testBtn_Click"/>
     </Grid>
 </Window>
