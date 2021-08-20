@@ -11,39 +11,71 @@ namespace RunescapeQuests2022
     //For some reason staticwebassets.json and staticwebassets.runtime.json saves my build directory for wwwroot on
     //compliation. I'm sure there is some way to fix it but I have no idea at this moment so I am making a dirty hack that will
     //load in the json, edit the files to be the application directory , and save it before any calls to wwwroot happen
+    //TODO: Error checking, null reference fixes
     public class FixStaticAssetsJson
     {
         public FixStaticAssetsJson()
         {
+            //Current application path
             var currentPath = AppDomain.CurrentDomain.BaseDirectory;
             var staticWebAssets = currentPath + AppDomain.CurrentDomain.FriendlyName + ".staticwebassets.json";
+            var staticWebAssetsRuntime = currentPath + AppDomain.CurrentDomain.FriendlyName + ".staticwebassets.runtime.json";
+
+            //json options to keep indentation
+            JsonSerializerOptions options = new()
+            { 
+                WriteIndented = true
+
+            };
+
+            //open and deserialize the static web assets file
             var staticWebAssetsJson = JsonSerializer.Deserialize<StaticWebAssets>(File.ReadAllText(staticWebAssets));
+            //first reference to the incorrect path, lets change it to the current app directory
             staticWebAssetsJson.DiscoveryPatterns[0].ContentRoot = currentPath + "wwwroot\\";
+
+            //the static web asset file also has references to each file within wwwroot, which also contains the incorrect path
             foreach(var item in staticWebAssetsJson.Assets)
             {
                 item.ContentRoot = currentPath + "wwwroot\\";
-                var wwwrootIndex = item.Identity.IndexOf("wwwroot");
-                var wwwrootStr = item.Identity.Substring(wwwrootIndex);
+                //get the file name from the saved path
+                var wwwrootStr = item.Identity.Substring(item.Identity.IndexOf("wwwroot"));
                 item.Identity = currentPath + wwwrootStr;
             }
-            var jsonSerialized = JsonSerializer.Serialize(staticWebAssetsJson);
-            File.WriteAllText(staticWebAssets, jsonSerialized);
+            //Seralize the class and write it back into the file 
+            var staticWebAssetsSerialized = JsonSerializer.Serialize(staticWebAssetsJson, options);
+            File.WriteAllText(staticWebAssets, staticWebAssetsSerialized);
 
-            var staticWebAssetsRuntime = currentPath + AppDomain.CurrentDomain.FriendlyName + ".staticwebassets.runtime.json";
-            var runtimeAssetText = File.ReadAllText(staticWebAssetsRuntime);
-            RuntimeAssetJson runtimeAssetJson = JsonSerializer.Deserialize<RuntimeAssetJson>(runtimeAssetText);
+            //Next file is the Static Web Assets Runtime file, read and deserialize the file
+            RuntimeAssetJson runtimeAssetJson = JsonSerializer.Deserialize<RuntimeAssetJson>(File.ReadAllText(staticWebAssetsRuntime));
+            //only reference is the content roots, fix this, serialize the class, and save it 
             runtimeAssetJson.ContentRoots[0] = currentPath + "wwwroot\\";
-            var runtimeAssetJsonConvert = JsonSerializer.Serialize(runtimeAssetJson);
+            var runtimeAssetJsonConvert = JsonSerializer.Serialize(runtimeAssetJson, options);
             File.WriteAllText(staticWebAssetsRuntime, runtimeAssetJsonConvert);
         }
     }
 
+    //Static Web Assets Runtime Json Class
     public class RuntimeAssetJson
     {
         public List<string> ContentRoots { get; set; }
+        //we require nothing in root so just save as dynamic and let the runtime deal with it
         public dynamic Root { get; set; }
     }
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+
+    //Static Web Asset Json Classes
+    public class StaticWebAssets
+    {
+        public int Version { get; set; }
+        public string Hash { get; set; }
+        public string Source { get; set; }
+        public string BasePath { get; set; }
+        public string Mode { get; set; }
+        public string ManifestType { get; set; }
+        public List<object> RelatedManifests { get; set; }
+        public List<DiscoveryPattern> DiscoveryPatterns { get; set; }
+        public List<Asset> Assets { get; set; }
+    }
+
     public class DiscoveryPattern
     {
         public string Name { get; set; }
@@ -69,18 +101,5 @@ namespace RunescapeQuests2022
         public string CopyToOutputDirectory { get; set; }
         public string CopyToPublishDirectory { get; set; }
         public string OriginalItemSpec { get; set; }
-    }
-
-    public class StaticWebAssets
-    {
-        public int Version { get; set; }
-        public string Hash { get; set; }
-        public string Source { get; set; }
-        public string BasePath { get; set; }
-        public string Mode { get; set; }
-        public string ManifestType { get; set; }
-        public List<object> RelatedManifests { get; set; }
-        public List<DiscoveryPattern> DiscoveryPatterns { get; set; }
-        public List<Asset> Assets { get; set; }
     }
 }
