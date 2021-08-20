@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RunescapeQuests2022
+namespace RunescapeQuests2022.RazorPages
 {
     public partial class Counter
     {
+
     }
 }

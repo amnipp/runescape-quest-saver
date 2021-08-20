@@ -15,7 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using RunescapeQuests;
 using System.ComponentModel;
-
+using RunescapeQuests2022.Windows;
+using Microsoft.AspNetCore.Components.WebView.Wpf;
 namespace RunescapeQuests2022
 {
     /// <summary>
@@ -26,10 +27,12 @@ namespace RunescapeQuests2022
         private Settings userSettings;
         public MainWindow()
         {
+            new FixStaticAssetsJson();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
+            
             Resources.Add("services", serviceCollection.BuildServiceProvider());
-
+            
             userSettings = new();
             InitializeComponent();
             if (!string.IsNullOrEmpty(userSettings.LastUser))
@@ -37,7 +40,6 @@ namespace RunescapeQuests2022
                 playerNameBox.Text = userSettings.LastUser;
                 LoadPlayerInfo(userSettings.LastUser);
             }
-            new FixStaticAssetsJson();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -63,10 +65,16 @@ namespace RunescapeQuests2022
 
             quests.ItemsSource = player.PlayerQuests.PlayerQuestList;
 
-            foreach (var skill in player.PlayerSkills.PlayerSkills)
+            
+            //help.UpdatePlayerSkillsList();
+            /*var blazorSkillComponent = BlazorSkills.ComponentType;
+            var blazorSkillType = Type.GetType(blazorSkillComponent.FullName);
+            var updateMethod = blazorSkillComponent.GetMethod("UpdatePlayerSkillsList");*/
+
+            /*(foreach (var skill in player.PlayerSkills.PlayerSkills)
             {
                 AppendToSkillLog(skill.name + ": " + skill.level);
-            }
+            }*/
         }
         /*private void AppendToQuestLog(string toAppend)
         {
@@ -74,7 +82,7 @@ namespace RunescapeQuests2022
         }*/
         private void AppendToSkillLog(string toAppend)
         {
-            skills.Text += toAppend + "\r\n";
+            //skills.Text += toAppend + "\r\n";
         }
 
         private void questsbox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -88,7 +96,7 @@ namespace RunescapeQuests2022
 
         private void loadPlayer_Click(object sender, RoutedEventArgs e)
         {
-            skills.Text = "";
+            //skills.Text = "";
             var playerName = playerNameBox.Text;
             if (string.IsNullOrEmpty(playerName))
             {

@@ -4,7 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
-    xmlns:local="clr-namespace:RunescapeQuests2022"
+    xmlns:local="clr-namespace:RunescapeQuests2022.RazorPages" 
     mc:Ignorable="d"
         Title="Runescape Quest Helper" Height="650" Width="800">
     <Grid>
@@ -22,8 +22,13 @@
             <TextBlock x:Name="quests" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"  />
         </ScrollViewer>-->
         <Border BorderThickness="1" BorderBrush="Gray" Margin="10,1,10,1" Grid.Column="1" Grid.Row="1">
-            <ScrollViewer>
-                <TextBlock x:Name="skills" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" ></TextBlock>
+            <ScrollViewer Padding="10px">
+                <blazor:BlazorWebView x:Name="BlazorView" HostPage="wwwroot/index.html" Services="{StaticResource services}">
+                    <blazor:BlazorWebView.RootComponents>
+                        <blazor:RootComponent x:Name="BlazorSkills" Selector="#app" ComponentType="{x:Type local:PlayerSkills}" />
+                    </blazor:BlazorWebView.RootComponents>
+                </blazor:BlazorWebView>
+                <!--"<TextBlock x:Name="skills" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" ></TextBlock>-->
             </ScrollViewer>
         </Border>
         <Label x:Name="label" Content="Quests" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Height="24" Width="46"/>

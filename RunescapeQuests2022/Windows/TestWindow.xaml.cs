@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Components.WebView.Wpf;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,8 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
-namespace RunescapeQuests2022
+namespace RunescapeQuests2022.Windows
 {
     /// <summary>
     /// Interaction logic for TestWindow.xaml
@@ -23,11 +23,13 @@ namespace RunescapeQuests2022
     {
         public TestWindow()
         {
+
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
 
             Resources.Add("services", serviceCollection.BuildServiceProvider());
             InitializeComponent();
+            
         }
     }
 }

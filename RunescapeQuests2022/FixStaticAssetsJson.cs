@@ -25,7 +25,6 @@ namespace RunescapeQuests2022
             JsonSerializerOptions options = new()
             { 
                 WriteIndented = true
-
             };
 
             //open and deserialize the static web assets file

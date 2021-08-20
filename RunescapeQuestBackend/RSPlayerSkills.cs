@@ -58,7 +58,7 @@ namespace RunescapeQuests
         public Skillvalue Slayer; //id=18
         public Skillvalue Farming; //id=19
         public Skillvalue Runecrafting; //id=20
-        public Skillvalue Hunting; //id=21
+        public Skillvalue Hunter; //id=21
         public Skillvalue Construction; //id=22
         public Skillvalue Summoning; //id=23
         public Skillvalue Dungeoneering; //id=24

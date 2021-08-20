@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuestTests", "QuestTests\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunescapeQuests2022", "RunescapeQuests2022\RunescapeQuests2022.csproj", "{095015D2-1E28-4843-8E60-26610F4B8D32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunescapeQuestBackend", "RunescapeQuestBackend\RunescapeQuestBackend.csproj", "{1231DC1C-4101-443D-BBC1-F6338A1D0780}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunescapeQuestBackend", "RunescapeQuestBackend\RunescapeQuestBackend.csproj", "{1231DC1C-4101-443D-BBC1-F6338A1D0780}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

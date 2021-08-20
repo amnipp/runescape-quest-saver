@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RunescapeQuests2022
+namespace RunescapeQuests2022.Windows
 {
     /// <summary>
     /// Interaction logic for QuestChecker.xaml
