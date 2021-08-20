@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using RunescapeQuests
+@namespace RunescapeQuests2022.Blazor
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid">
+                <table id="PlayerQuestTable" class="table">
+                    <tbody>
+                        @if (PlayerQuestList != null)
+                        {
+                            @foreach (var quest in PlayerQuestList)
+                            {
+                                <tr>
+                                    @quest.title
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+         </div>
+        <div class="col">
+            @if (PlayerSkillsList != null)
+            {
+                @foreach (var skill in PlayerSkillsList)
+                {
+                    <RenderFragmentChild style="padding:10px; white-space:nowrap;">
+                        <img src="/skills/@(skill.name).png" height="32" width="32"/> @skill.level
+                    </RenderFragmentChild>
+                }
+            }
+        </div>
+    </div>
+</div>
+@code
+{
+
+}

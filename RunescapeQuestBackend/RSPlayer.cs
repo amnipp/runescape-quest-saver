@@ -29,11 +29,14 @@ namespace RunescapeQuests
             if (String.IsNullOrEmpty(PlayerName))
                 return;
             PlayerSkills = new();
-            await PlayerSkills.LoadPlayerStats(PlayerName);
+            var taskSkills = PlayerSkills.LoadPlayerStats(PlayerName);
+ 
+            PlayerQuests = new();
+            var taskQuests = PlayerQuests.LoadPlayerQuests(PlayerName);
+
+            await Task.WhenAll(taskSkills, taskQuests);
             if (PlayerSkills.ValidPlayerStats == false)
                 return;
-            PlayerQuests = new();
-            await PlayerQuests.LoadPlayerQuests(PlayerName);
             if (PlayerQuests.ValidPlayerQuests == false)
                 return;
             IsValidPlayer = true;
