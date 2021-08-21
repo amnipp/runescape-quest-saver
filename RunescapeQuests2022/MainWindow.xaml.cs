@@ -26,12 +26,11 @@ namespace RunescapeQuests2022
     {
         
         public MainWindow()
-        {
+        { 
             new FixStaticAssetsJson();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
             Resources.Add("services", serviceCollection.BuildServiceProvider());
-
             InitializeComponent();
         }
 
@@ -42,11 +41,10 @@ namespace RunescapeQuests2022
             Application.Current.Shutdown();
         }
 
-        private async void LoadPlayerInfo(string PlayerName)
+        private async void LoadPlayerInfo()
         {
 
-            //
-            /*quests.ItemsSource = player.PlayerQuests.PlayerQuestList;*/
+
 
 
             //help.UpdatePlayerSkillsList();
@@ -57,7 +55,7 @@ namespace RunescapeQuests2022
             /*(foreach (var skill in player.PlayerSkills.PlayerSkills)
             {
                 AppendToSkillLog(skill.name + ": " + skill.level);
-            }*/
+            }
         }
         private void AppendToQuestLog(string toAppend)
         {

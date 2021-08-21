@@ -14,52 +14,82 @@ namespace RunescapeQuests2022.Blazor
 {
     public partial class MainWindow
     {
-        private Settings userSettings;
-        private string playerName;
-        private bool needToReloadQuests = true;
         public Skills PlayerSkillsList { get; set; }
         public List<Quest> PlayerQuestList { get; set;  }
+        private string playerNameInput;
+        private bool shouldRedraw = true;
+        private Settings userSettings;
         protected override async void OnInitialized()
         {
+
             if (RSPlayer.Instance.PlayerSkills != null)
                 PlayerSkillsList = RSPlayer.Instance.PlayerSkills.PlayerSkills;
+
             if (RSPlayer.Instance.PlayerQuests != null)
                 PlayerQuestList = RSPlayer.Instance.PlayerQuests.PlayerQuestList;
-            await LoadPlayerInfo();
-        }
-
-        public async Task LoadPlayerInfo()
-        {
+            
+            string playerName = "";
             userSettings = new();
             if (!string.IsNullOrEmpty(userSettings.LastUser))
             {
                 //playerNameBox.Text = userSettings.LastUser;
                 playerName = userSettings.LastUser;
             }
+            await LoadPlayer(playerName).ContinueWith(t => { 
+                base.OnInitialized(); 
+            });
+            
+        }
+        
+        public async Task LoadPlayer(string plrName)
+        {
+
             RSPlayer player = RSPlayer.Instance;
-            player.SetPlayerName(playerName);
+            player.SetPlayerName(plrName);
             await player.LoadPlayerInformation();
             if (player.IsValidPlayer == false)
             {
                 //MessageBox.Show(playerName + " is not a valid player name, please try another name", "Error");
                 return;
             }
-
-            userSettings.LastUser = playerName;
-            userSettings.SaveSettings();
-            StateHasChanged();  
+            StateHasChanged();
         }
-        protected override void OnAfterRender(bool firstRender)
+     
+        protected override async void OnAfterRender(bool firstRender)
         {
-            base.OnAfterRender(firstRender);
-            if (RSPlayer.Instance.PlayerSkills != null)
-                PlayerSkillsList = RSPlayer.Instance.PlayerSkills.PlayerSkills;
-            if (RSPlayer.Instance.PlayerQuests != null && RSPlayer.Instance.PlayerQuests.PlayerQuestList.Count != 0 && needToReloadQuests == true)
+            if (!firstRender)
             {
-                PlayerQuestList = RSPlayer.Instance.PlayerQuests.PlayerQuestList;
-                needToReloadQuests = false;
-                StateHasChanged();
+                if (RSPlayer.Instance.PlayerSkills != null)
+                    PlayerSkillsList = RSPlayer.Instance.PlayerSkills.PlayerSkills;
+                if (RSPlayer.Instance.PlayerQuests != null)
+                {
+                    PlayerQuestList = RSPlayer.Instance.PlayerQuests.PlayerQuestList;
+
+                }
+                if (PlayerQuestList.Count != 0 && shouldRedraw)
+                {
+                    shouldRedraw = false;
+                    StateHasChanged();
+                }
+                else if (shouldRedraw == false) shouldRedraw = true;
             }
+            base.OnAfterRender(firstRender);
+        }
+
+        public void TestClick()
+        {
+            Console.WriteLine("Hello!");
+        }
+        public async void UpdatePlayer()
+        {
+            if (!string.IsNullOrEmpty(playerNameInput))
+            {
+                userSettings.LastUser = playerNameInput;
+                userSettings.SaveSettings();
+                
+                await LoadPlayer(playerNameInput);
+            }
+
         }
     }
 }

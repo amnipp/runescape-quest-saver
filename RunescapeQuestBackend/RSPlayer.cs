@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RunescapeQuests
 {
-    public sealed class RSPlayer
+    public class RSPlayer
     {
         private static readonly Lazy<RSPlayer> lazyPlayer = new Lazy<RSPlayer>(() => new RSPlayer());
         public static RSPlayer Instance { get { return lazyPlayer.Value; } }

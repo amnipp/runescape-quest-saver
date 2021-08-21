@@ -8,6 +8,14 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
 	  <None Include="wwwroot\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
