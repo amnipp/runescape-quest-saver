@@ -1,6 +1,6 @@
 # runescape-quest-saver
-This is just a test to improve my ASPNetCore proficiency, this is not meant to be used by anyone.
+Disclaimer: This is just a test to improve my ASPNetCore proficiency, this is not meant to be used by anyone. This program is also built using experimental preview builds of .NET
 
-This application will be used to plan out which Runescape 3 quests you want to complete. I might add more functionality later.
+This program is used to organize your Runescape 3 questing experience. Look up quests, check requirements, and save a quest list to refer to later. 
 
-For now it uses Html Agility Pack (HAP) to parse the RS3 wiki.
+This program is built in .NET 6.0 Preview 7 along with WebView2 to create a website-like appearance all within a window's application. To run this program you will need .NET Desktop Runtime 6.0.0-preview.7 (https://dotnet.microsoft.com/download/dotnet/6.0) and WebView 2 (https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section). I personally used Visual Studio 2022 and installed .NET MAUI (https://docs.microsoft.com/en-us/dotnet/maui/get-started/installation)
