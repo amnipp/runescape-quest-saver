@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
-using RunescapeQuests;
+using RunescapeQuestsBackend;
+using RunescapeQuestsBackend.RSPlayer;
 
 namespace RunescapeQuests2022.Blazor
 {
@@ -22,7 +23,7 @@ namespace RunescapeQuests2022.Blazor
         private string skillMarkup = "";
         protected override async void OnInitialized()
         {
-            var questLoader = new QuestLoader();
+            var questLoader = new QuestWikiLookup();
             await questLoader.LoadQuestInfo(questName).ContinueWith(async t => {
                 QuestList = questLoader.QuestList;
                 SkillList = questLoader.SkillList;

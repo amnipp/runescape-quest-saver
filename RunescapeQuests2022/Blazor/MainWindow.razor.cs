@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
-using RunescapeQuests;
+using RunescapeQuestsBackend;
+using RunescapeQuestsBackend.RSPlayer;
 
 namespace RunescapeQuests2022.Blazor
 {

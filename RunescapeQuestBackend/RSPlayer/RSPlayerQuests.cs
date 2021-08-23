@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace RunescapeQuests
+namespace RunescapeQuestsBackend.RSPlayer
 {
     public class RSPlayerQuests
     {

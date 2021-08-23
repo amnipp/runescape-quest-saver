@@ -9,9 +9,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace RunescapeQuests
+namespace RunescapeQuestsBackend
 {
-    public class QuestLoader
+    public class QuestWikiLookup
     {
         //private AppendToQuestLogDelegate AppendToQuestLog;
         //private AppendToSkillLogDelegate AppendToSkillLog;
@@ -21,7 +21,7 @@ namespace RunescapeQuests
         public List<KeyValuePair<int, string>> QuestList { get; private set; }
         public List<KeyValuePair<int, string>> SkillList { get; private set; }
         public bool QuestLoaded;
-        public QuestLoader()
+        public QuestWikiLookup()
         {
             QuestList = new();
             SkillList = new();
@@ -44,7 +44,7 @@ namespace RunescapeQuests
                 QuestLoaded = true;
         }
 
-        public string GetQuestListString()
+        /*public string GetQuestListString()
         {
             string questListString = "";
             foreach(var quest in QuestList)
@@ -93,7 +93,8 @@ namespace RunescapeQuests
                 skillListString += "\r\n";
             }
             return skillListString;
-        }
+        }*/
+
         private bool LoadQuestRequirements()
         {
             if (WikiPageDoc.DocumentNode != null)

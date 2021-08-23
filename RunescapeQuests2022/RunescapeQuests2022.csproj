@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RunescapeQuestBackend\RunescapeQuestBackend.csproj" />
+    <ProjectReference Include="..\RunescapeQuestBackend\RunescapeQuestsBackend.csproj" />
   </ItemGroup>
 
   <ItemGroup>

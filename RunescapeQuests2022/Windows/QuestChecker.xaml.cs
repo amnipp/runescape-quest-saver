@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using RunescapeQuests;
+using RunescapeQuestsBackend;
 using System.ComponentModel;
 using RunescapeQuests2022.Windows;
 using Microsoft.AspNetCore.Components.WebView.Wpf;
