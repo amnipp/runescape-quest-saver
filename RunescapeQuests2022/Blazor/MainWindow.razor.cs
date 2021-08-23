@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
-
+using Microsoft.JSInterop;
 using RunescapeQuests;
 
 namespace RunescapeQuests2022.Blazor
@@ -19,9 +19,10 @@ namespace RunescapeQuests2022.Blazor
         private string playerNameInput;
         private bool shouldRedraw = true;
         private Settings userSettings;
+
+
         protected override async void OnInitialized()
         {
-
             if (RSPlayer.Instance.PlayerSkills != null)
                 PlayerSkillsList = RSPlayer.Instance.PlayerSkills.PlayerSkills;
 
@@ -34,16 +35,16 @@ namespace RunescapeQuests2022.Blazor
             {
                 //playerNameBox.Text = userSettings.LastUser;
                 playerName = userSettings.LastUser;
+                playerNameInput = playerName;
             }
-            await LoadPlayer(playerName).ContinueWith(t => { 
-                base.OnInitialized(); 
+
+            await LoadPlayer(playerName).ContinueWith( t => { 
+                base.OnInitialized();
             });
-            
         }
         
         public async Task LoadPlayer(string plrName)
         {
-
             RSPlayer player = RSPlayer.Instance;
             player.SetPlayerName(plrName);
             await player.LoadPlayerInformation();
@@ -54,7 +55,10 @@ namespace RunescapeQuests2022.Blazor
             }
             StateHasChanged();
         }
-     
+        public async void FilterTable()
+        {
+            await JSRuntime.InvokeVoidAsync("filterTable", "QuestNameInput", "PlayerQuestTable");
+        }
         protected override async void OnAfterRender(bool firstRender)
         {
             if (!firstRender)
@@ -66,7 +70,7 @@ namespace RunescapeQuests2022.Blazor
                     PlayerQuestList = RSPlayer.Instance.PlayerQuests.PlayerQuestList;
 
                 }
-                if (PlayerQuestList.Count != 0 && shouldRedraw)
+                if (PlayerQuestList != null && PlayerQuestList.Count != 0 && shouldRedraw)
                 {
                     shouldRedraw = false;
                     StateHasChanged();
@@ -76,10 +80,12 @@ namespace RunescapeQuests2022.Blazor
             base.OnAfterRender(firstRender);
         }
 
-        public void TestClick()
+        public void OpenQuestCheckerWindow(string questName)
         {
-            Console.WriteLine("Hello!");
+            Windows.QuestChecker questChecker = new (questName.Replace(" ", "_"));
+            questChecker.Show();
         }
+
         public async void UpdatePlayer()
         {
             if (!string.IsNullOrEmpty(playerNameInput))

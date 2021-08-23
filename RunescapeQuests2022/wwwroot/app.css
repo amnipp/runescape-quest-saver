@@ -22,5 +22,5 @@ body {
     height: 100%;
 }
 .table-hover > tbody > tr:hover {
-    background-color: #D2D2D2;
+    background-color: #292f33 !important;
 }

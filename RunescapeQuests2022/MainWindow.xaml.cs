@@ -24,13 +24,15 @@ namespace RunescapeQuests2022
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        //private readonly TestAppData testAppData = new();
         public MainWindow()
         { 
             new FixStaticAssetsJson();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
+            //serviceCollection.AddSingleton<TestAppData>(testAppData);
             Resources.Add("services", serviceCollection.BuildServiceProvider());
+
             InitializeComponent();
         }
 
@@ -98,6 +100,7 @@ namespace RunescapeQuests2022
 
         private void filterAll_Click(object sender, RoutedEventArgs e)
         {
+            //BlazorView.WebView.CoreWebView2.ExecuteScriptAsync();
             /*ICollectionView view = CollectionViewSource.GetDefaultView(quests.ItemsSource);
             view.Filter = null;*/
         }

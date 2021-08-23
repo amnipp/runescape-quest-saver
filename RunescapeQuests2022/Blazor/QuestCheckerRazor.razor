@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using RunescapeQuests
+@namespace RunescapeQuests2022.Blazor
+@inject string questName
+<h4>@questName.Replace("_", " ")</h4>
+<div>
+    <div class="row">
+        <div class="col-7" style="height:200px;">
+            <div class="" style="height:100vh; overflow-y:auto">
+                <h5>Quests Required</h5>
+                <div id="QuestSide">
+                    @((MarkupString)questMarkup)
+                </div>
+            </div>
+        </div>
+        <div class="col-5" style="height:100vh;">
+            <h5>Skills Required</h5>
+            <div id="SkillSide">
+                @((MarkupString)skillMarkup)
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+}
