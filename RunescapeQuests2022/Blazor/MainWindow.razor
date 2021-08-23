@@ -28,7 +28,14 @@
                 </div>
                 <div>
                     <h3>Quest Filters</h3>
-                    <input id="QuestNameInput" class="form-control" @onkeyup="() => FilterTable()"/>
+                    <div class="container">
+                        <input id="QuestNameInput" class="form-control" @onkeyup="() => FilterTable()"/>
+                        <button id="filterAll" class="btn btn-outline-primary" @onclick="FilterAll">All Quests</button>
+                        <button id="filterCompleted" class="btn btn-outline-primary" @onclick="FilterCompleted">Completed</button>
+                        <button id="filterStarted" class="btn btn-outline-primary" @onclick="FilterStarted">Started</button>
+                        <button id="filterNotStartedEligible" class="btn btn-outline-primary" @onclick="FilterNotStartedEligible">Not-Started</button>
+                        <button id="filterNotStartedNotEligible" class="btn btn-outline-primary" @onclick="FilterNotStartedNotEligible">Not-Eligible</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,7 +47,7 @@
                         {
                             @foreach (var quest in PlayerQuestList)
                             {
-                                <tr @onclick="() => OpenQuestCheckerWindow(quest.title)" role="button" style="background-color:@quest.color; color:white" >
+                                <tr @onclick="() => OpenQuestCheckerWindow(quest.title)" role="button" style="background-color:@quest.color; color:white" data-completition="@quest.status" eligible="@quest.userEligible.ToString()">
                                     @quest.title 
                                 </tr>
                             }
