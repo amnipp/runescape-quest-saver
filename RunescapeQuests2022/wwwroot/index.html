@@ -5,12 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Blazor app</title>
     <base href="/" />
-    <link href="BlazorWebViewOnWPF.styles.css" rel="stylesheet" />
     <link href="app.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>-->
+    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body style="height:100vh;overflow-y:hidden;overflow-x:hidden">
     <div id="app"></div>
     <script src="_framework/blazor.webview.js"></script>
+    <script>
+        window.filterTable = (inputName, tableName) => {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById(inputName);
+            filter = input.value.toUpperCase();
+            table = document.getElementById(tableName);
+            tr = table.getElementsByTagName("tr");
+            console.log(tr);
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i]) {
+                    txtValue = tr[i].textContent || tr[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+        window.filterTableAll = (tableName) => {
+            table = document.getElementById(tableName);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i]) {
+                    tr[i].style.display = "";
+                }
+            }
+        };
+
+        window.filterCompleted = (tableName) => {
+            table = document.getElementById(tableName);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i]) {
+                    if (tr[i].getAttribute("data-completition") == "COMPLETED") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+
+        window.filterStarted = (tableName) => {
+            table = document.getElementById(tableName);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i]) {
+                    if (tr[i].getAttribute("data-completition") == "STARTED") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+        window.filterNotStartEligible = (tableName) => {
+            table = document.getElementById(tableName);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i]) {
+                    if (tr[i].getAttribute("data-completition") == "NOT_STARTED" && tr[i].getAttribute("data-eligible") == "True") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+        window.filterNotStartNotEligible = (tableName) => {
+            table = document.getElementById(tableName);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i]) {
+                    if (tr[i].getAttribute("data-completition") == "NOT_STARTED" && tr[i].getAttribute("data-eligible") == "False") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+    </script>
 </body>
+
 </html>
