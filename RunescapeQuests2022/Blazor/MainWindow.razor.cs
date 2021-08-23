@@ -59,6 +59,26 @@ namespace RunescapeQuests2022.Blazor
         {
             await JSRuntime.InvokeVoidAsync("filterTable", "QuestNameInput", "PlayerQuestTable");
         }
+        public async void FilterAll()
+        {
+            await JSRuntime.InvokeVoidAsync("filterTableAll", "PlayerQuestTable");
+        }
+        public async void FilterCompleted()
+        {
+            await JSRuntime.InvokeVoidAsync("filterCompleted", "PlayerQuestTable");
+        }
+        public async void FilterStarted()
+        {
+            await JSRuntime.InvokeVoidAsync("filterStarted", "PlayerQuestTable");
+        }
+        public async void FilterNotStartedEligible()
+        {
+            await JSRuntime.InvokeVoidAsync("filterNotStartEligible", "PlayerQuestTable");
+        }
+        public async void FilterNotStartedNotEligible()
+        {
+            await JSRuntime.InvokeVoidAsync("filterNotStartNotEligible", "PlayerQuestTable");
+        }
         protected override async void OnAfterRender(bool firstRender)
         {
             if (!firstRender)
