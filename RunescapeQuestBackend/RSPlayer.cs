@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RunescapeQuests
 {
-    public sealed class RSPlayer
+    public class RSPlayer
     {
         private static readonly Lazy<RSPlayer> lazyPlayer = new Lazy<RSPlayer>(() => new RSPlayer());
         public static RSPlayer Instance { get { return lazyPlayer.Value; } }
@@ -29,11 +29,14 @@ namespace RunescapeQuests
             if (String.IsNullOrEmpty(PlayerName))
                 return;
             PlayerSkills = new();
-            await PlayerSkills.LoadPlayerStats(PlayerName);
+            var taskSkills = PlayerSkills.LoadPlayerStats(PlayerName);
+ 
+            PlayerQuests = new();
+            var taskQuests = PlayerQuests.LoadPlayerQuests(PlayerName);
+
+            await Task.WhenAll(taskSkills, taskQuests);
             if (PlayerSkills.ValidPlayerStats == false)
                 return;
-            PlayerQuests = new();
-            await PlayerQuests.LoadPlayerQuests(PlayerName);
             if (PlayerQuests.ValidPlayerQuests == false)
                 return;
             IsValidPlayer = true;

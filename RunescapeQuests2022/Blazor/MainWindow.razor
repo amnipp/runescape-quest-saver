@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@using RunescapeQuests
+@namespace RunescapeQuests2022.Blazor
+@inject IJSRuntime JSRuntime 
+<div class="">
+    <div class="row">
+        <div class="col-5" style="height:100vh;padding:25px!important;">
+            <div class="">
+                <div style="padding-bottom:25px; padding-top:10px" class="row"> 
+                    <div class="col-8 form-group">
+                        <input id="PlayerName" class="form-control" @bind="playerNameInput"/>
+                    </div>
+                    <div class="col-1">
+                        <button id="SetPlayerNameBtn" class="btn btn-outline-primary" @onclick="UpdatePlayer">Load</button>
+                    </div>
+                </div>
+                <div style="padding-bottom:25px">
+                    @if (PlayerSkillsList != null && PlayerSkillsList.Agility !=null)
+                    {
+                        @foreach (var skill in PlayerSkillsList)
+                        {
+                            <RenderFragmentChild style="padding:10px; white-space:nowrap;">
+                                <img src="/skills/@(skill.name).png" height="32" width="32"/> @skill.level
+                            </RenderFragmentChild>
+                        }
+                    }
+                </div>
+                <div>
+                    <h3>Quest Filters</h3>
+                    <input id="QuestNameInput" class="form-control" @onkeyup="() => FilterTable()"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-7" style="height:200px;">
+            <div class="" style="height:100vh; overflow-y:auto">
+                <table id="PlayerQuestTable" class="table table-hover">
+                    <tbody>
+                        @if (PlayerQuestList != null && PlayerQuestList.Count != 0)
+                        {
+                            @foreach (var quest in PlayerQuestList)
+                            {
+                                <tr @onclick="() => OpenQuestCheckerWindow(quest.title)" role="button" style="background-color:@quest.color; color:white" >
+                                    @quest.title 
+                                </tr>
+                            }
+                        }
+                   </tbody>
+                </table>
+            </div>
+         </div>
+    </div>
+</div>
+
+
+@code
+{
+
+}

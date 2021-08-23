@@ -1,1 +1,26 @@
-﻿
+﻿.scroll-col {
+    position: absolute;
+    overflow-y: scroll;
+    max-height: 300px;
+}
+
+tr {
+    line-height: 50px;
+    min-height: 50px;
+    height: 50px;
+    background: white;
+    padding-left: 10px;
+    border-bottom: 1px solid black;
+    display: block;
+    text-align: center;
+}
+
+body {
+    height: 700px;
+}
+.table100, .row, .container, .table-responsive, .table-bordered  {
+    height: 100%;
+}
+.table-hover > tbody > tr:hover {
+    background-color: #292f33 !important;
+}
