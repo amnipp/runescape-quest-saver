@@ -47,7 +47,7 @@
                         {
                             @foreach (var quest in PlayerQuestList)
                             {
-                                <tr @onclick="() => OpenQuestCheckerWindow(quest.title)" role="button" style="background-color:@quest.color; color:white" data-completition="@quest.status" eligible="@quest.userEligible.ToString()">
+                                <tr @onclick="() => OpenQuestCheckerWindow(quest.title)" role="button" style="background-color:@quest.color; color:white" data-completition="@quest.status" data-eligible="@quest.userEligible.ToString()">
                                     @quest.title 
                                 </tr>
                             }
