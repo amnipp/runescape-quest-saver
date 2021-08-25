@@ -13,6 +13,8 @@ namespace RunescapeQuestsBackend.RSPlayer
         public RSPlayerSkills PlayerSkills { get; private set; }
         public RSPlayerQuests PlayerQuests { get; private set; }
 
+
+
         private string PlayerName;
 
         private RSPlayer()

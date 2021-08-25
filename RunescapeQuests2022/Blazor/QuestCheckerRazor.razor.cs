@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 using RunescapeQuestsBackend;
+using RunescapeQuestsBackend.QuestSaver;
 using RunescapeQuestsBackend.RSPlayer;
 
 namespace RunescapeQuests2022.Blazor
@@ -21,19 +22,19 @@ namespace RunescapeQuests2022.Blazor
         private List<KeyValuePair<int, string>> SkillList = new();
         private string questMarkup = "";
         private string skillMarkup = "";
-        protected override async void OnInitialized()
+        protected override void OnInitialized()
         {
-            var questLoader = new QuestWikiLookup();
-            await questLoader.LoadQuestInfo(questName).ContinueWith(async t => {
-                QuestList = questLoader.QuestList;
-                SkillList = questLoader.SkillList;
-                base.OnInitialized();
-                await InvokeAsync(() => {
-                    SetQuestMarkup();
-                    SetSkillMarkup();
-                    StateHasChanged();
-                }); 
-            });
+            var foundQuest = CachedQuests.Instance.CachedQuestData.Where(q => q.QuestName == questName.Replace("_", " ")).FirstOrDefault();
+            if (foundQuest == null) return;
+            QuestList = foundQuest.QuestRequirements;
+            foreach(var skill in foundQuest.SkillRequirements)
+            {
+                if(skill != null)
+                    SkillList.Add(new KeyValuePair<int, string>(skill.level, skill.name));
+            }
+            SetQuestMarkup();
+            SetSkillMarkup();
+            base.OnInitialized();
         }
         private void SetQuestMarkup()
         {
@@ -109,6 +110,12 @@ namespace RunescapeQuests2022.Blazor
                 skillMarkup += "</li>";
             }
             skillMarkup += "</ul>";
+        }
+
+        public void AddQuests()
+        {
+            //List<KeyValuePair<int, string>> QuestList
+            SavedQuestOrganizer.AddQuestChain(questName);
         }
     }
 }

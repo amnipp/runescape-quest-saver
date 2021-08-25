@@ -17,6 +17,7 @@ using RunescapeQuestsBackend;
 using System.ComponentModel;
 using RunescapeQuests2022.Windows;
 using Microsoft.AspNetCore.Components.WebView.Wpf;
+using RunescapeQuestsBackend.QuestSaver;
 
 namespace RunescapeQuests2022.Windows
 {
@@ -28,11 +29,12 @@ namespace RunescapeQuests2022.Windows
         //Delegates to allow other classes to write strings to the GUI
         //public delegate void AppendToQuestLogDelegate(string text);
         //public delegate void AppendToSkillLogDelegate(string text);
-        public QuestChecker(string questName)
+        public QuestChecker(string questName, QuestOrganizer SavedQuestOrganizer)
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
             serviceCollection.AddSingleton<string>(questName);
+            serviceCollection.AddSingleton<QuestOrganizer>(SavedQuestOrganizer);
             //serviceCollection.AddSingleton<TestAppData>(testAppData);
             Resources.Add("services", serviceCollection.BuildServiceProvider());
 

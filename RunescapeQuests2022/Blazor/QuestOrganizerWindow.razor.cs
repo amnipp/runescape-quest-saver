@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RunescapeQuests2022.RazorPages
+namespace RunescapeQuests2022.Blazor
 {
-    public partial class Counter
+    public partial class QuestOrganizerWindow
     {
-
     }
 }

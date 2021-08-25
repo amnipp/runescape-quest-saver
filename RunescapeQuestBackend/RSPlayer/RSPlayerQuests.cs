@@ -5,14 +5,19 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using RunescapeQuestsBackend.QuestSaver;
 namespace RunescapeQuestsBackend.RSPlayer
 {
     public class RSPlayerQuests
     {
         public List<Quest> PlayerQuestList { get; private set; }
+        
+        public List<QuestData> PlayerSavedQuests { get; set; }
+
         public async Task LoadPlayerQuests(string PlayerName)
         {
+            //Todo load saved quests from file
+            PlayerSavedQuests = new();
             ValidPlayerQuests = false;
             PlayerQuestList = new();
             HttpClient client = new HttpClient();
@@ -47,31 +52,5 @@ namespace RunescapeQuestsBackend.RSPlayer
             ValidPlayerQuests = true;
         }
         public bool ValidPlayerQuests { get; private set; }
-    }
-
-    //Quest status class to be used like an ENUM
-    public static class QUEST_STATUS
-    {
-        public const string Completed = "COMPLETED";
-        public const string Started = "STARTED";
-        public const string NotStarted = "NOT_STARTED";
-    }
-
-    //Runemetric quest json classes
-    public class Quest
-    {
-        public string title { get; set; }
-        public string status { get; set; }
-        public int difficulty { get; set; }
-        public bool members { get; set; }
-        public int questPoints { get; set; }
-        public bool userEligible { get; set; }
-        public string color { get; set; }
-    }
-
-    public class RunemetricQuests
-    {
-        public List<Quest> quests { get; set; }
-        public string loggedIn { get; set; }
     }
 }

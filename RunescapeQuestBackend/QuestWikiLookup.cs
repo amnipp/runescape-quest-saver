@@ -21,6 +21,7 @@ namespace RunescapeQuestsBackend
         public List<KeyValuePair<int, string>> QuestList { get; private set; }
         public List<KeyValuePair<int, string>> SkillList { get; private set; }
         public bool QuestLoaded;
+        public string QuestName { get; private set; }
         public QuestWikiLookup()
         {
             QuestList = new();
@@ -28,20 +29,29 @@ namespace RunescapeQuestsBackend
         }
         public async Task LoadQuestInfo(string questName)
         {
-            QuestLoaded = false;
-            //create client and call the RS Wiki api with the given quest name, this is json formated, and it is loading only the Overview (section=2)
-            HttpClient client = new HttpClient();
-            var response = await client.GetAsync("https://runescape.wiki/api.php?action=parse&format=json&page=" + questName + "&prop=text");
-            var pageContents = await response.Content.ReadAsStringAsync();
-            //get the page contents and parse the json class, most of it is unneeded; parse.parse.text.text contains the html for the overview
-            ApiJsonRoot parse = JsonSerializer.Deserialize<ApiJsonRoot>(pageContents);
-            //create the HAP page doc to parse the html
-            WikiPageDoc = new HtmlDocument();
-            WikiPageDoc.LoadHtml(parse.parse.text.text);
-            bool questReqLoaded =  LoadQuestRequirements();
-            bool skillReqLoaded = LoadSkillRequirments();
-            if (questReqLoaded && skillReqLoaded)
-                QuestLoaded = true;
+            QuestName = questName;
+            try
+            {
+                QuestLoaded = false;
+                //create client and call the RS Wiki api with the given quest name, this is json formated, and it is loading only the Overview (section=2)
+                HttpClient client = new HttpClient();
+                var response = await client.GetAsync("https://runescape.wiki/api.php?action=parse&format=json&page=" + questName + "&prop=text");
+                var pageContents = await response.Content.ReadAsStringAsync();
+                //get the page contents and parse the json class, most of it is unneeded; parse.parse.text.text contains the html for the overview
+                ApiJsonRoot parse = JsonSerializer.Deserialize<ApiJsonRoot>(pageContents);
+                if (parse.parse == null) return;
+                //create the HAP page doc to parse the html
+                WikiPageDoc = new HtmlDocument();
+                WikiPageDoc.LoadHtml(parse.parse.text.text);
+                bool questReqLoaded = LoadQuestRequirements();
+                bool skillReqLoaded = LoadSkillRequirments();
+                if (questReqLoaded && skillReqLoaded)
+                    QuestLoaded = true;
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         /*public string GetQuestListString()
@@ -111,6 +121,7 @@ namespace RunescapeQuestsBackend
                 }
                 //more xpath, this is mostly just looking through the wiki layout and going past the unneeded sections
                 var quest = table.SelectSingleNode(".//tbody/tr[2]/td/ul/li/ul");
+                if (quest == null) return true;
                 //we should finally have the quest list, child nodes will be all the root quest requirments
                 var rows = quest.ChildNodes;
                 if (rows == null)
