@@ -26,6 +26,7 @@ namespace RunescapeQuests2022.Windows
     /// </summary>
     public partial class QuestChecker : Window
     {
+        private QuestOrganizerState _questOrganizerState = new();
         //Delegates to allow other classes to write strings to the GUI
         //public delegate void AppendToQuestLogDelegate(string text);
         //public delegate void AppendToSkillLogDelegate(string text);
@@ -35,6 +36,7 @@ namespace RunescapeQuests2022.Windows
             serviceCollection.AddBlazorWebView();
             serviceCollection.AddSingleton<string>(questName);
             serviceCollection.AddSingleton<QuestOrganizer>(SavedQuestOrganizer);
+            serviceCollection.AddSingleton<QuestOrganizerState>(_questOrganizerState);
             //serviceCollection.AddSingleton<TestAppData>(testAppData);
             Resources.Add("services", serviceCollection.BuildServiceProvider());
 
