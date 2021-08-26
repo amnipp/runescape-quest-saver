@@ -1,13 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
+@using RunescapeQuests2022.Windows
 @using RunescapeQuestsBackend
+@using RunescapeQuestsBackend.QuestSaver
 @namespace RunescapeQuests2022.Blazor
 @inject string questName
+@inject QuestOrganizer SavedQuestOrganizer
+@inject QuestOrganizerState QuestOrganizerStates
 <h4>@questName.Replace("_", " ")</h4>
-<div>
+<div class="" style="height:100vh; overflow-y:auto">
     <div class="row">
         <div class="col-7" style="height:200px;">
             <div class="" style="height:100vh; overflow-y:auto">
                 <h5>Quests Required</h5>
+                <button id="addQuests" class="btn btn-outline-primary" @onclick="AddQuests">Add Quests</button>
                 <div id="QuestSide">
                     @((MarkupString)questMarkup)
                 </div>

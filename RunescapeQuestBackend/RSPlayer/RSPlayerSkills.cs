@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RunescapeQuestsBackend.RSPlayer
@@ -37,33 +38,61 @@ namespace RunescapeQuestsBackend.RSPlayer
     }
     public class Skills
     {
+        [JsonInclude]
         public Skillvalue Attack; //id=0
+        [JsonInclude]
         public Skillvalue Defence; //id=1
+        [JsonInclude]
         public Skillvalue Strength; //id=2
+        [JsonInclude]
         public Skillvalue Constitution; //id=3
+        [JsonInclude]
         public Skillvalue Ranged; //id=4
+        [JsonInclude]
         public Skillvalue Prayer; //id=5
+        [JsonInclude]
         public Skillvalue Magic; //id=6
+        [JsonInclude]
         public Skillvalue Cooking; //id=7
+        [JsonInclude]
         public Skillvalue Woodcutting; //id=8
+        [JsonInclude]
         public Skillvalue Fletching; //id=9
+        [JsonInclude]
         public Skillvalue Fishing; //id=10
+        [JsonInclude]
         public Skillvalue Firemaking; //id=11
+        [JsonInclude]
         public Skillvalue Crafting; //id=12
+        [JsonInclude]
         public Skillvalue Smithing; //id=13
+        [JsonInclude]
         public Skillvalue Mining; //id=14
+        [JsonInclude]
         public Skillvalue Herblore; //id=15
+        [JsonInclude]
         public Skillvalue Agility; //id=16
+        [JsonInclude]
         public Skillvalue Thieving; //id=17
+        [JsonInclude]
         public Skillvalue Slayer; //id=18
+        [JsonInclude]
         public Skillvalue Farming; //id=19
+        [JsonInclude]
         public Skillvalue Runecrafting; //id=20
+        [JsonInclude]
         public Skillvalue Hunter; //id=21
+        [JsonInclude]
         public Skillvalue Construction; //id=22
+        [JsonInclude]
         public Skillvalue Summoning; //id=23
+        [JsonInclude]
         public Skillvalue Dungeoneering; //id=24
+        [JsonInclude]
         public Skillvalue Divination; //id=25
+        [JsonInclude]
         public Skillvalue Invention; //id=26
+        [JsonInclude]
         public Skillvalue Archaeology; //id=27
         public IEnumerator<Skillvalue> GetEnumerator()
         {
@@ -73,8 +102,51 @@ namespace RunescapeQuestsBackend.RSPlayer
                 yield return (Skillvalue)field.GetValue(this);
             }
         }
+        public void SetSkillValue(string fieldName, int value)
+        {
+            var field = GetType().GetFields().Where(f => fieldName.Contains(f.Name)).FirstOrDefault();
+            if (field == null) return;
+            Skillvalue sv = new();
+            sv.id = (int)((SkillID)Enum.Parse(typeof(SkillID), field.Name));
+            sv.level = value;
+            sv.name = field.Name;
+            sv.rank = -1;
+            sv.xp = -1;
+            field.SetValue(this, sv);
+        }
     }
+    public enum SkillID
+    {
+        Attack, 
+        Defence,
+        Strength,
+        Constitution,
+        Ranged,
+        Prayer,
+        Magic,
+        Cooking,
+        Woodcutting,
+        Fletching,
+        Fishing,
+        Firemaking,
+        Crafting,
+        Smithing,
+        Mining,
+        Herblore,
+        Agility,
+        Thieving,
+        Slayer,
+        Farming,
+        Runecrafting,
+        Hunter,
+        Construction,
+        Summoning,
+        Dungeoneering,
+        Divination,
+        Invention,
+        Archaeology
 
+    }
     // Runemetrics Profile JSON Classes
     public class Activity
     {

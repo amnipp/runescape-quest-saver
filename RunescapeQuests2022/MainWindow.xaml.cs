@@ -17,6 +17,8 @@ using RunescapeQuestsBackend;
 using System.ComponentModel;
 using RunescapeQuests2022.Windows;
 using Microsoft.AspNetCore.Components.WebView.Wpf;
+using RunescapeQuestsBackend.QuestSaver;
+
 namespace RunescapeQuests2022
 {
     /// <summary>
@@ -24,15 +26,17 @@ namespace RunescapeQuests2022
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly QuestOrganizer _questOrganizer = new();
         //private readonly TestAppData testAppData = new();
         public MainWindow()
         { 
             new FixStaticAssetsJson();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddBlazorWebView();
+            serviceCollection.AddSingleton<QuestOrganizer>(_questOrganizer);
             //serviceCollection.AddSingleton<TestAppData>(testAppData);
             Resources.Add("services", serviceCollection.BuildServiceProvider());
-
+            CachedQuests.Instance.LoadCachedQuests();
             InitializeComponent();
         }
 

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
 using RunescapeQuestsBackend;
 using RunescapeQuestsBackend.RSPlayer;
-
+using RunescapeQuestsBackend.QuestSaver;
 namespace RunescapeQuests2022.Blazor
 {
     public partial class MainWindow
@@ -103,10 +103,14 @@ namespace RunescapeQuests2022.Blazor
 
         public void OpenQuestCheckerWindow(string questName)
         {
-            Windows.QuestChecker questChecker = new (questName.Replace(" ", "_"));
+            Windows.QuestChecker questChecker = new (questName.Replace(" ", "_"), SavedQuestOrganizer);
             questChecker.Show();
         }
-
+        public void OpenSavedQuestsWindow()
+        {
+            Windows.QuestOrganizerWindow questOrganizer = new(SavedQuestOrganizer);
+            questOrganizer.Show();
+        }
         public async void UpdatePlayer()
         {
             if (!string.IsNullOrEmpty(playerNameInput))
@@ -117,6 +121,12 @@ namespace RunescapeQuests2022.Blazor
                 await LoadPlayer(playerNameInput);
             }
 
+        }
+        public async void CompileQuestList()
+        {
+            await CompileQuestDatabase.Compile().ContinueWith(async t => {
+                await JSRuntime.InvokeVoidAsync("alertBox", "Finished caching quests");
+            });
         }
     }
 }

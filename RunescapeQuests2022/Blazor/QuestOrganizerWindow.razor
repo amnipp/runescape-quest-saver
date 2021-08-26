@@ -1,0 +1,170 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using RunescapeQuests2022.Windows
+@using RunescapeQuestsBackend
+@using RunescapeQuestsBackend.QuestSaver
+@using RunescapeQuestsBackend.RSPlayer
+@namespace RunescapeQuests2022.Blazor
+@inject QuestOrganizer SavedQuestOrganizer
+@inject QuestOrganizerState QuestOrganizerStates
+<div class="" style="height:100vh; overflow-y:auto">
+    @foreach(var quest in SavedQuestOrganizer.SavedQuestList)
+    {
+        //SetQuestMarkup(quest);
+        if(questCount == 0)
+        {
+            <text>
+                <div class="card text-white bg-primary mb-3"style="width: 24rem;">
+
+                    @foreach(var childQuest in quest)
+                    {
+                        if (childQuest.Key == -1)
+                        {
+                            <div class="card-header" @onclick="() => SelectQuest(childQuest.Value.QuestName)" role="button"> @childQuest.Value.QuestName</div>
+                        }
+                        else
+                        {
+                            <ul class="list-group list-group-flush">
+                            <li @onclick="() => SelectQuest(childQuest.Value.QuestName)" role="button" class="list-group-item"><p class="card-text"> 
+                            
+                            @for (int i=1 ; i <= childQuest.Key;i++)
+                            {
+                                <text>
+                                    &emsp;
+                                </text>
+                            }
+                            
+                            @if(childQuest.Key != -1 && childQuest.Value.Quest.userEligible == true)
+                            {
+                                @childQuest.Value.QuestName <text>&nbsp;</text> @((MarkupString)exlamationCircle)
+                            }
+                            else if(childQuest.Key != -1)
+                            {
+                                @childQuest.Value.QuestName <text>&nbsp;</text> @((MarkupString)xCircle)         
+                            }
+                            </p></li></ul>
+                        }
+                    }
+                    <button @onclick="() => RemoveQuest(quest)" class="btn btn-danger" style="margin-top:auto">Remove</button>
+                </div>
+            </text>
+            questCount++;
+        }
+        else
+        {
+            <text>
+                <div class="card text-white bg-primary mb-3"style="width: 24rem;">
+
+                    @foreach(var childQuest in quest)
+                    {
+                        if (childQuest.Key == -1)
+                        {
+                            <div class="card-header"> @childQuest.Value.QuestName</div>
+                        }
+                        else
+                        {
+                            <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><p class="card-text"> 
+                            
+                            @for (int i=1 ; i <= childQuest.Key;i++)
+                            {
+                                <text>
+                                    &emsp;
+                                </text>
+                            }
+                            
+                            @if(childQuest.Key != -1 && childQuest.Value.Quest.userEligible == true)
+                            {
+                                @childQuest.Value.QuestName <text>&nbsp;</text> @((MarkupString)exlamationCircle)
+                            }
+                            else if(childQuest.Key != -1)
+                            {
+                                @childQuest.Value.QuestName <text>&nbsp;</text> @((MarkupString)xCircle)         
+                            }
+                            </p></li></ul>
+                        }
+                    }
+                    <button @onclick="() => RemoveQuest(quest)" class="btn btn-danger" style="margin-top:auto">Remove</button>
+                </div>
+            </text>
+            questCount++;
+        }
+
+    }
+</div>
+@code {
+    private string questHeader = "";
+    private string questMarkup = "";
+    private string checkCircle = "";
+    private string exlamationCircle = "";
+    private string xCircle = "";
+    private string whiteX = "";
+    private string dashCircle = "";
+    private int questCount = 0;
+    protected override void OnInitialized()
+    {
+          checkCircle = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"green\" class=\"bi bi-check-circle\" viewBox=\"0 0 16 16\">";
+          checkCircle += "<path d=\"M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z\"/>";
+          checkCircle += "<path d=\"M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z\"/></svg>";
+                    
+          exlamationCircle = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"blue\" class=\"bi bi-check-circle\" viewBox=\"0 0 16 16\">";
+          exlamationCircle += "<path d=\"M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z\"/>";
+          exlamationCircle += "<path d=\"M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z\"/></svg>";
+          
+          xCircle = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"red\" class=\"bi bi-x-circle\" viewBox=\"0 0 16 16\">";
+          xCircle += "<path d=\"M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z\"/>";
+          xCircle += "<path d=\"M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z\"/></svg>";
+
+          dashCircle = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"white\" class=\"bi bi-x-circle\" viewBox=\"0 0 16 16\">";
+          dashCircle += "<path d=\"M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z\"/>";
+          dashCircle += "<path d=\"M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z\"/></svg>";
+
+        base.OnInitialized();
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        questCount = 0;
+    }
+    private void SetQuestMarkup(List<KeyValuePair<int, QuestData>> questList)
+    {
+        questHeader = "";
+        questMarkup = "";
+
+
+        foreach (var quest in questList)
+        {
+            
+            if (quest.Key == -1)
+            {
+                questHeader += "<div class=\"card-header\">" + quest.Value.QuestName + "</div>";
+            }
+            else
+                questMarkup += "<li class=\"list-group-item\"><p class=\"card-text\">";
+
+            for (int i=1 ; i <= quest.Key;i++)
+            {
+                questMarkup += "&emsp;";
+            }
+
+            if(quest.Key != -1 && quest.Value.Quest.userEligible == true)
+            {
+                questMarkup += quest.Value.QuestName;
+                questMarkup += " " + exlamationCircle;
+            }
+            else if(quest.Key != -1)
+            {
+                questMarkup += quest.Value.QuestName;
+                questMarkup += " " + xCircle;                
+            }
+            questMarkup += "</p></li>";
+        }
+    }
+    private void RemoveQuest(List<KeyValuePair<int, QuestData>> questList)
+    {
+        SavedQuestOrganizer.RemoveQuest(questList);
+        StateHasChanged();
+    }
+    private void SelectQuest(string questName)
+    {
+        QuestOrganizerStates.QuestName = questName;
+    }
+}

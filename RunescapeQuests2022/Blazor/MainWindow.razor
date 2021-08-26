@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using RunescapeQuestsBackend
+@using RunescapeQuestsBackend.QuestSaver
 @namespace RunescapeQuests2022.Blazor
 @inject IJSRuntime JSRuntime 
+@inject QuestOrganizer SavedQuestOrganizer
 <div class="">
     <div class="row">
         <div class="col-5" style="height:100vh;padding:25px!important;">
@@ -27,6 +29,9 @@
                     }
                 </div>
                 <div>
+                    <button id="OpenSavedQuestsWindowBtn" class="btn btn-outline-primary" @onclick="OpenSavedQuestsWindow">Open Saved Quests</button>
+                </div>
+                <div>
                     <h3>Quest Filters</h3>
                     <div class="container">
                         <input id="QuestNameInput" class="form-control" @onkeyup="() => FilterTable()"/>
@@ -38,6 +43,7 @@
                     </div>
                 </div>
             </div>
+            <button @onclick="CompileQuestList" class="btn btn-danger" style="position:absolute; bottom:0;margin-bottom:25px">Update Cached Quests</button>
         </div>
         <div class="col-7" style="height:200px;">
             <div class="" style="height:100vh; overflow-y:auto">

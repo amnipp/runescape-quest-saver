@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
-
+using RunescapeQuests2022.Windows;
 using RunescapeQuestsBackend;
+using RunescapeQuestsBackend.QuestSaver;
 using RunescapeQuestsBackend.RSPlayer;
 
 namespace RunescapeQuests2022.Blazor
@@ -21,22 +22,15 @@ namespace RunescapeQuests2022.Blazor
         private List<KeyValuePair<int, string>> SkillList = new();
         private string questMarkup = "";
         private string skillMarkup = "";
-        protected override async void OnInitialized()
+        protected override void OnInitialized()
         {
-            var questLoader = new QuestWikiLookup();
-            await questLoader.LoadQuestInfo(questName).ContinueWith(async t => {
-                QuestList = questLoader.QuestList;
-                SkillList = questLoader.SkillList;
-                base.OnInitialized();
-                await InvokeAsync(() => {
-                    SetQuestMarkup();
-                    SetSkillMarkup();
-                    StateHasChanged();
-                }); 
-            });
+            QuestOrganizerStates.QuestNameChanged += QuestNameChanged;
+
+            base.OnInitialized();
         }
         private void SetQuestMarkup()
         {
+            questMarkup = "";
             questMarkup += "<ul style=\"list-style-type:none;\">";
             foreach (var quest in QuestList)
             {
@@ -58,31 +52,7 @@ namespace RunescapeQuests2022.Blazor
         }
         private void SetSkillMarkup()
         {
-            /*            string skillListString = ""; 
-            var playerSkills = RSPlayer.Instance.PlayerSkills.PlayerSkills;
-            FieldInfo[] fields = typeof(Skills).GetFields();
-            foreach (var skill in SkillList)
-            {
-                if (skill.Key != -1)
-                    skillListString += skill.Value + " " + skill.Key;
-                else
-                    skillListString += skill.Value + " ";
-                var skillField = fields.Where(f => f.Name == skill.Value).FirstOrDefault();
-                if (skillField != null)
-                {
-                    var skillLevel = ((Skillvalue)skillField.GetValue(playerSkills)).level;
-                    if (skillLevel >= skill.Key)
-                    {
-                        skillListString += " - COMPLETED";
-                    }
-                    else
-                    {
-                        skillListString += " - NOT COMPLETED";
-                    }
-                }
-                skillListString += "\r\n";
-            }
-            return skillListString;*/
+            skillMarkup = "";
             skillMarkup += "<ul style=\"list-style-type:none;\">";
             var playerSkills = RSPlayer.Instance.PlayerSkills.PlayerSkills;
             FieldInfo[] fields = typeof(Skills).GetFields();
@@ -109,6 +79,43 @@ namespace RunescapeQuests2022.Blazor
                 skillMarkup += "</li>";
             }
             skillMarkup += "</ul>";
+        }
+        private bool _shouldUpdate = true;
+        protected override void OnAfterRender(bool firstRender)
+        {
+            var foundQuest = CachedQuests.Instance.CachedQuestData.Where(q => q.QuestName == questName.Replace("_", " ")).FirstOrDefault();
+            if (foundQuest == null) return;
+            QuestList = foundQuest.QuestRequirements;
+            SkillList = new();
+            foreach (var skill in foundQuest.SkillRequirements)
+            {
+                if (skill != null)
+                    SkillList.Add(new KeyValuePair<int, string>(skill.level, skill.name));
+            }
+            SetQuestMarkup();
+            SetSkillMarkup();
+            if(_shouldUpdate == true)
+            {
+                _shouldUpdate = false;
+                StateHasChanged();
+            }
+            else
+            {
+                _shouldUpdate = true;
+            }
+            base.OnAfterRender(firstRender);
+        }
+
+        private void QuestNameChanged(object sender, EventArgs e)
+        {
+            questName = ((QuestOrganizerState)sender).QuestName;
+            StateHasChanged();
+        }
+
+        public void AddQuests()
+        {
+            //List<KeyValuePair<int, string>> QuestList
+            SavedQuestOrganizer.AddQuestChain(questName);
         }
     }
 }
