@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RunescapeQuestsBackend.QuestSaver
@@ -9,11 +11,12 @@ namespace RunescapeQuestsBackend.QuestSaver
     public class QuestOrganizer
     {
         public List<List<KeyValuePair<int, QuestData>>> SavedQuestList {  get; set; }
-
+        private readonly string savedQuestFile = System.AppDomain.CurrentDomain.BaseDirectory + "/quests.json";
         public QuestOrganizer() 
         {
             //todo load quests from file
             SavedQuestList = new();
+            LoadQuestDataFromFile();
         }
 
         public void AddQuestChain(string questName)
@@ -38,8 +41,36 @@ namespace RunescapeQuestsBackend.QuestSaver
                 }
             }
             SavedQuestList.Add(questList);
+            SaveQuestDataToFile();
         }
 
-        
+        public void SaveQuestDataToFile()
+        {
+            if (!File.Exists(savedQuestFile))
+            {
+                return;
+            }
+            string jsonString = JsonSerializer.Serialize(SavedQuestList);
+            File.WriteAllText(savedQuestFile, jsonString);
+        }
+
+        public void LoadQuestDataFromFile()
+        {
+            if (!File.Exists(savedQuestFile))
+            {
+                File.Create(savedQuestFile);
+                return;
+            }
+            string settings = File.ReadAllText(savedQuestFile);
+            if (settings.Length == 0) return;
+            SavedQuestList = JsonSerializer.Deserialize<List<List<KeyValuePair<int, QuestData>>>>(settings);
+        }
+
+        public bool RemoveQuest(List<KeyValuePair<int, QuestData>> quest)
+        {
+            bool result = SavedQuestList.Remove(quest);
+            SaveQuestDataToFile();
+            return result;
+        }
     }
 }

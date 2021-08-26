@@ -108,6 +108,7 @@
     }
     private void RemoveQuest(List<KeyValuePair<int, QuestData>> questList)
     {
-        Console.WriteLine();
+        SavedQuestOrganizer.RemoveQuest(questList);
+        StateHasChanged();
     }
 }
