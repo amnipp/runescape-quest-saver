@@ -9,8 +9,8 @@
         Title="QuestOrganizer" Height="800" Width="1400">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="19*"/>
-            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <blazor:BlazorWebView x:Name="BlazorView2" HostPage="wwwroot/index.html" Services="{StaticResource services}">
             <blazor:BlazorWebView.RootComponents>

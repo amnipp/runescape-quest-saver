@@ -83,6 +83,7 @@ namespace RunescapeQuests2022.Blazor
         private bool _shouldUpdate = true;
         protected override void OnAfterRender(bool firstRender)
         {
+            if (CachedQuests.Instance.CachedQuestData == null) return;
             var foundQuest = CachedQuests.Instance.CachedQuestData.Where(q => q.QuestName == questName.Replace("_", " ")).FirstOrDefault();
             if (foundQuest == null) return;
             QuestList = foundQuest.QuestRequirements;

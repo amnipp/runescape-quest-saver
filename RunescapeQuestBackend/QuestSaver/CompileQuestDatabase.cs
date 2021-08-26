@@ -16,6 +16,8 @@ namespace RunescapeQuestsBackend.QuestSaver
         {
             List<QuestData> questDataList = new();
             List<Task> taskList = new();
+            if (RSPlayer.RSPlayer.Instance.PlayerQuests == null)
+                return;
             var questList = RSPlayer.RSPlayer.Instance.PlayerQuests.PlayerQuestList;
             foreach (var quest in questList)
             {

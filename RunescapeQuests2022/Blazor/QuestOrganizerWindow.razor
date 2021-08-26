@@ -6,14 +6,14 @@
 @namespace RunescapeQuests2022.Blazor
 @inject QuestOrganizer SavedQuestOrganizer
 @inject QuestOrganizerState QuestOrganizerStates
-<div class="" style="height:100vh; overflow-y:auto">
+<div class="container" style="height:100vh;width:95vw; overflow-y:auto">
     @foreach(var quest in SavedQuestOrganizer.SavedQuestList)
     {
         //SetQuestMarkup(quest);
         if(questCount == 0)
         {
             <text>
-                <div class="card text-white bg-primary mb-3"style="width: 24rem;">
+                <div class="card text-white bg-primary mb-3 d-flex" >
 
                     @foreach(var childQuest in quest)
                     {
@@ -52,18 +52,17 @@
         else
         {
             <text>
-                <div class="card text-white bg-primary mb-3"style="width: 24rem;">
-
+                <div class="card text-white bg-dark mb-3 d-flex">
                     @foreach(var childQuest in quest)
                     {
                         if (childQuest.Key == -1)
                         {
-                            <div class="card-header"> @childQuest.Value.QuestName</div>
+                            <div class="card-header" @onclick="() => SelectQuest(childQuest.Value.QuestName)" role="button"> @childQuest.Value.QuestName</div>
                         }
                         else
                         {
                             <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><p class="card-text"> 
+                            <li @onclick="() => SelectQuest(childQuest.Value.QuestName)" role="button" class="list-group-item"><p class="card-text"> 
                             
                             @for (int i=1 ; i <= childQuest.Key;i++)
                             {
