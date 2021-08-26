@@ -1,9 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
+@using RunescapeQuests2022.Windows
 @using RunescapeQuestsBackend
 @using RunescapeQuestsBackend.QuestSaver
 @using RunescapeQuestsBackend.RSPlayer
 @namespace RunescapeQuests2022.Blazor
 @inject QuestOrganizer SavedQuestOrganizer
+@inject QuestOrganizerState QuestOrganizerStates
 <div class="" style="height:100vh; overflow-y:auto">
     @foreach(var quest in SavedQuestOrganizer.SavedQuestList)
     {
@@ -72,6 +74,7 @@
     }
     protected override void OnAfterRender(bool firstRender)
     {
+        questCount = 0;
     }
     private void SetQuestMarkup(List<KeyValuePair<int, QuestData>> questList)
     {
@@ -81,6 +84,7 @@
 
         foreach (var quest in questList)
         {
+            
             if (quest.Key == -1)
             {
                 questHeader += "<div class=\"card-header\">" + quest.Value.QuestName + "</div>";
@@ -110,5 +114,9 @@
     {
         SavedQuestOrganizer.RemoveQuest(questList);
         StateHasChanged();
+    }
+    private void SelectQuest(string questName)
+    {
+        QuestOrganizerStates.QuestName = questName;
     }
 }

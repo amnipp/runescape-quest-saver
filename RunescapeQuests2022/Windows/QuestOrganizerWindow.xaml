@@ -6,12 +6,22 @@
     xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
     xmlns:local="clr-namespace:RunescapeQuests2022.Blazor" 
     mc:Ignorable="d"
-        Title="QuestOrganizer" Height="800" Width="450">
+        Title="QuestOrganizer" Height="800" Width="1400">
     <Grid>
-        <blazor:BlazorWebView x:Name="BlazorView" HostPage="wwwroot/index.html" Services="{StaticResource services}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="9*"/>
+        </Grid.ColumnDefinitions>
+        <blazor:BlazorWebView x:Name="BlazorView2" HostPage="wwwroot/index.html" Services="{StaticResource services}">
+            <blazor:BlazorWebView.RootComponents>
+                <blazor:RootComponent Selector="#app" ComponentType="{x:Type local:QuestCheckerRazor}" />
+            </blazor:BlazorWebView.RootComponents>
+        </blazor:BlazorWebView>
+        <blazor:BlazorWebView x:Name="BlazorView" HostPage="wwwroot/index.html" Services="{StaticResource services}" Grid.Column="1">
             <blazor:BlazorWebView.RootComponents>
                 <blazor:RootComponent Selector="#app" ComponentType="{x:Type local:QuestOrganizerWindow}" />
             </blazor:BlazorWebView.RootComponents>
         </blazor:BlazorWebView>
+
     </Grid>
 </Window>
